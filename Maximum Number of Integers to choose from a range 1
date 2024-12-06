@@ -1,0 +1,22 @@
+class Solution {
+public:
+    int maxCount(vector<int>& ban, int n, int maxSum) {
+        sort(ban.begin(),ban.end());
+        int sum=0,c=0,i=1,j=0,b=ban.size();
+        while(i<=n && sum+i<=maxSum){
+            if(j<b && ban[j] ==i) {
+              i++;
+              j++;
+            }
+            else if(j<b && ban[j]<i){
+                j++;
+            }
+            else{
+              c++;
+              sum+=i;
+              i++;
+            }
+        }
+       return c;   
+    }
+};
