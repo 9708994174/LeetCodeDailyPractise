@@ -1,0 +1,48 @@
+#include <queue>
+#include <unordered_map>
+#include <string>
+
+class Solution {
+public:
+    std::string repeatLimitedString(std::string s, int limit) {
+        std::unordered_map<char, int> freq;
+        for (char c : s) freq[c]++;
+        
+        // Max-heap to store characters in decreasing order
+        std::priority_queue<char> pq;
+        for (auto& it : freq) pq.push(it.first);
+        
+        std::string result;
+        
+        while (!pq.empty()) {
+            char curr = pq.top();
+            pq.pop();
+            int count = freq[curr];
+            
+            // If count <= limit, append all occurrences
+            if (count <= limit) {
+                result.append(count, curr);
+                freq.erase(curr);
+            }
+            // If count > limit
+            else {
+                result.append(limit, curr);
+                freq[curr] -= limit;
+
+                if (pq.empty()) break; // Can't break repetition if no other character exists
+                
+                // Append the next largest character to break repetition
+                char next = pq.top();
+                pq.pop();
+                result.push_back(next);
+                freq[next]--;
+                
+                // Return characters with remaining occurrences back to the heap
+                if (freq[next] > 0) pq.push(next);
+                pq.push(curr);
+            }
+        }
+        
+        return result;
+    }
+};
